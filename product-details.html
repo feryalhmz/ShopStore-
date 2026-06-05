@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سهل شوب - تفاصيل المنتج</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Cairo', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --blue: #2563EB; --orange: #FF6B00; --dark: #1e293b; --light: #f0f4ff; }
+    body { background: #f8faff; }
+
+    /* NAVBAR */
+    .navbar {
+      background: white;
+      padding: 0 32px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(37,99,235,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar-logo img { height: 44px; cursor: pointer; }
+    .navbar-search {
+      flex: 1;
+      max-width: 440px;
+      margin: 0 24px;
+      position: relative;
+    }
+    .navbar-search input {
+      width: 100%;
+      border: 2px solid #e8eef8;
+      border-radius: 12px;
+      padding: 10px 18px 10px 44px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      outline: none;
+    }
+    .navbar-search input:focus { border-color: var(--blue); }
+    .search-btn {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .navbar-actions { display: flex; align-items: center; gap: 6px; }
+    .nav-icon-btn {
+      position: relative;
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 10px;
+      transition: background 0.2s;
+    }
+    .nav-icon-btn:hover { background: var(--light); }
+    .badge-dot {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      background: var(--orange);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--light);
+      border-radius: 12px;
+      padding: 7px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--blue);
+      border: none;
+    }
+
+    /* BREADCRUMB */
+    .breadcrumb-bar {
+      background: white;
+      padding: 14px 32px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+    .breadcrumb-bar a { color: var(--blue); text-decoration: none; }
+    .breadcrumb-bar a:hover { text-decoration: underline; }
+    .breadcrumb-bar span { margin: 0 8px; }
+
+    /* MAIN CONTENT */
+    .main-content { padding: 32px; max-width: 1100px; margin: 0 auto; }
+
+    /* PRODUCT SECTION */
+    .product-section {
+      background: white;
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 24px;
+    }
+
+    /* IMAGE SIDE */
+    .product-image-box {
+      background: var(--light);
+      border-radius: 20px;
+      min-height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 100px;
+      overflow: hidden;
+      position: relative;
+    }
+    .product-image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 20px;
+    }
+    .no-image-placeholder { opacity: 0.4; }
+
+    /* INFO SIDE */
+    .product-info { display: flex; flex-direction: column; gap: 16px; }
+
+    .product-badge {
+      display: inline-block;
+      background: #fff0e6;
+      color: var(--orange);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 8px;
+      width: fit-content;
+    }
+
+    .product-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--dark);
+      line-height: 1.3;
+    }
+
+    .product-price-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .price-main {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--blue);
+    }
+    .price-currency { font-size: 18px; font-weight: 600; }
+
+    .stock-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+    }
+    .in-stock { background: #f0fdf4; color: #16a34a; }
+    .out-stock { background: #fef2f2; color: #dc2626; }
+
+    .divider { height: 1px; background: #f0f0f0; }
+
+    .product-desc {
+      font-size: 15px;
+      color: #64748b;
+      line-height: 1.8;
+    }
+
+    /* QUANTITY */
+    .qty-label { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: var(--light);
+      border-radius: 12px;
+      width: fit-content;
+      overflow: hidden;
+    }
+    .qty-btn {
+      background: none;
+      border: none;
+      width: 44px;
+      height: 44px;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--blue);
+      font-weight: 700;
+      transition: background 0.2s;
+    }
+    .qty-btn:hover { background: #dbeafe; }
+    .qty-num {
+      min-width: 48px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    /* ACTION BUTTONS */
+    .action-buttons { display: flex; gap: 12px; }
+    .btn-add-cart {
+      flex: 1;
+      background: var(--orange);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(255,107,0,0.3);
+    }
+    .btn-add-cart:hover { background: #e55f00; transform: translateY(-2px); }
+
+    .btn-buy-now {
+      flex: 1;
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(37,99,235,0.3);
+    }
+    .btn-buy-now:hover { background: #1d4ed8; transform: translateY(-2px); }
+
+    /* FEATURES */
+    .features-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .feature-item {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .feature-item .f-icon { font-size: 28px; margin-bottom: 8px; }
+    .feature-item h6 { font-size: 13px; font-weight: 700; color: var(--dark); margin: 0; }
+    .feature-item p { font-size: 12px; color: #94a3b8; margin: 4px 0 0; }
+
+    /* RELATED */
+    .related-section { margin-bottom: 32px; }
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 20px;
+    }
+    .section-title span { color: var(--orange); }
+    .rel-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .rel-card:hover { transform: translateY(-4px); }
+    .rel-img {
+      height: 140px;
+      background: var(--light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+    .rel-img img { width: 100%; height: 100%; object-fit: cover; }
+    .rel-body { padding: 12px; }
+    .rel-name { font-size: 13px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+    .rel-price { font-size: 14px; font-weight: 800; color: var(--blue); }
+
+    /* LOADING */
+    .loading-state {
+      text-align: center;
+      padding: 80px;
+      color: #aaa;
+    }
+    .loading-state .icon { font-size: 48px; margin-bottom: 16px; }
+
+    /* FOOTER */
+    footer {
+      background: #0f172a;
+      color: #64748b;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-logo { font-size: 18px; font-weight: 800; color: white; }
+    .footer-logo span { color: var(--orange); }
+
+    @media (max-width: 768px) {
+      .product-section { grid-template-columns: 1fr; }
+      .features-row { grid-template-columns: 1fr 1fr; }
+      .main-content { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-logo" onclick="window.location.href='home.html'">
+      <img src="assets/images/logo.png" alt="سهل شوب">
+    </div>
+    <div class="navbar-search">
+      <input type="text" placeholder="ابحث عن منتجات...">
+      <button class="search-btn">🔍</button>
+    </div>
+    <div class="navbar-actions">
+      <button class="nav-icon-btn" onclick="window.location.href='cart.html'">
+        🛒 <span class="badge-dot" id="cartCount">0</span>
+      </button>
+      <button class="nav-icon-btn" onclick="window.location.href='orders.html'">📦</button>
+      <button class="nav-user" onclick="window.location.href='profile.html'">
+        👤 <span id="userName">حسابي</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb-bar">
+    <a href="home.html">الرئيسية</a>
+    <span>›</span>
+    <a href="products.html">المنتجات</a>
+    <span>›</span>
+    <span id="breadcrumbName">تفاصيل المنتج</span>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content">
+
+    <!-- PRODUCT DETAILS -->
+    <div id="productContainer">
+      <div class="loading-state">
+        <div class="icon">⏳</div>
+        <p>جاري تحميل المنتج...</p>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="features-row">
+      <div class="feature-item">
+        <div class="f-icon">🚚</div>
+        <h6>توصيل سريع</h6>
+        <p>خلال 48 ساعة</p>
+      </div>
+      <div class="feature-item">
+        <div class="f-icon">↩️</div>
+        <h6>إرجاع مضمون</h6>
+        <p>خلال 7 أيام</p>
+      </div>
+      <div class="feature-item">
+        <div class="f-icon">🔒</div>
+        <h6>دفع آمن</h6>
+        <p>بيانات مشفرة</p>
+      </div>
+    </div>
+
+    <!-- RELATED PRODUCTS -->
+    <div class="related-section">
+      <div class="section-title">منتجات <span>مشابهة</span></div>
+      <div class="row g-3" id="relatedGrid">
+        <div class="col-12 text-center py-3" style="color:#aaa;">جاري التحميل...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">سهل<span>شوب</span></div>
+    <p style="margin:0;font-size:13px;">جميع الحقوق محفوظة © 2025</p>
+  </footer>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script src="JS/firebase-config.js"></script>
+
+  <script>
+    let currentProduct = null;
+    let qty = 1;
+
+    // Auth check
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        db.collection("users").doc(user.uid).get().then(doc => {
+          if (doc.exists) {
+            document.getElementById("userName").textContent = doc.data().name.split(" ")[0];
+          }
+        });
+        loadProduct();
+      }
+    });
+
+    // Cart count
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const total = cart.reduce((s, i) => s + i.qty, 0);
+      document.getElementById("cartCount").textContent = total;
+    }
+    updateCartCount();
+
+    // Load product by ID from URL
+    function loadProduct() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+      if (!id) {
+        window.location.href = "products.html";
+        return;
+      }
+
+      db.collection("products").doc(id).get().then(doc => {
+        if (!doc.exists) {
+          window.location.href = "products.html";
+          return;
+        }
+        currentProduct = { id: doc.id, ...doc.data() };
+        renderProduct(currentProduct);
+        loadRelated(currentProduct.category, id);
+      });
+    }
+
+    function renderProduct(p) {
+      document.getElementById("breadcrumbName").textContent = p.name;
+      document.title = `سهل شوب - ${p.name}`;
+
+      const inStock = p.stock > 0;
+      document.getElementById("productContainer").innerHTML = `
+        <div class="product-section">
+          <div class="product-image-box">
+            ${p.image && p.image.trim()
+              ? `<img src="${p.image.trim()}" alt="${p.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22380%22 viewBox=%220 0 400 380%22%3E%3Crect width=%22400%22 height=%22380%22 fill=%22%23f0f4ff%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-size=%22100%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22%3E%F0%9F%9B%8D%EF%B8%8F%3C/text%3E%3C/svg%3E'" onload="this.style.opacity='1'" style="opacity:0;transition:opacity 0.3s;">`
+              : `<span class="no-image-placeholder">🛍️</span>`}
+          </div>
+          <div class="product-info">
+            <div class="product-badge">${p.category || "عام"}</div>
+            <div class="product-title">${p.name}</div>
+            <div class="product-price-box">
+              <div class="price-main">${Number(p.price).toLocaleString()}</div>
+              <div class="price-currency">دج</div>
+            </div>
+            <div class="${inStock ? 'stock-badge in-stock' : 'stock-badge out-stock'}">
+              ${inStock ? `✅ متوفر في المخزون (${p.stock} قطعة)` : "❌ غير متوفر"}
+            </div>
+            <div class="divider"></div>
+            <div class="product-desc">${p.description || "لا يوجد وصف لهذا المنتج."}</div>
+            <div class="divider"></div>
+            <div>
+              <div class="qty-label">الكمية</div>
+              <div class="qty-control">
+                <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                <div class="qty-num" id="qtyDisplay">1</div>
+                <button class="qty-btn" onclick="changeQty(1)">+</button>
+              </div>
+            </div>
+            <div class="action-buttons">
+              <button class="btn-add-cart" onclick="addToCart()" ${!inStock ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''}>
+                🛒 أضف للسلة
+              </button>
+              <button class="btn-buy-now" onclick="buyNow()" ${!inStock ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''}>
+                ⚡ اشتري الآن
+              </button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function changeQty(val) {
+      qty = Math.max(1, qty + val);
+      document.getElementById("qtyDisplay").textContent = qty;
+    }
+
+    function addToCart() {
+      if (!currentProduct) return;
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existing = cart.find(i => i.id === currentProduct.id);
+      if (existing) { existing.qty += qty; }
+      else { cart.push({ id: currentProduct.id, name: currentProduct.name, price: currentProduct.price, image: currentProduct.image || "", qty }); }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount();
+      showToast("✅ تمت الإضافة للسلة!");
+    }
+
+    function buyNow() {
+      addToCart();
+      window.location.href = "cart.html";
+    }
+
+    // Load related products
+    function loadRelated(category, currentId) {
+      db.collection("products").where("category", "==", category).limit(5).get().then(snapshot => {
+        const grid = document.getElementById("relatedGrid");
+        const items = snapshot.docs.filter(d => d.id !== currentId);
+        if (items.length === 0) {
+          grid.innerHTML = `<div class="col-12 text-center py-3" style="color:#aaa;">لا توجد منتجات مشابهة</div>`;
+          return;
+        }
+        grid.innerHTML = items.map(doc => {
+          const p = doc.data();
+          return `
+            <div class="col-6 col-md-3">
+              <div class="rel-card" onclick="window.location.href='product-details.html?id=${doc.id}'">
+                <div class="rel-img">
+                  ${p.image ? `<img src="${p.image}" alt="${p.name}">` : "🛍️"}
+                </div>
+                <div class="rel-body">
+                  <div class="rel-name">${p.name}</div>
+                  <div class="rel-price">${Number(p.price).toLocaleString()} دج</div>
+                </div>
+              </div>
+            </div>`;
+        }).join("");
+      });
+    }
+
+    function showToast(msg) {
+      const t = document.createElement("div");
+      t.textContent = msg;
+      t.style.cssText = `position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+        background:#1e293b;color:white;padding:12px 24px;border-radius:12px;
+        font-family:'Cairo',sans-serif;font-size:14px;font-weight:600;
+        z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.2);`;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2500);
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

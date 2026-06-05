@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سهل شوب - السلة</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Cairo', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --blue: #2563EB; --orange: #FF6B00; --dark: #1e293b; --light: #f0f4ff; }
+    body { background: #f8faff; }
+
+    /* NAVBAR */
+    .navbar {
+      background: white;
+      padding: 0 32px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(37,99,235,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar-logo img { height: 44px; cursor: pointer; }
+    .navbar-actions { display: flex; align-items: center; gap: 6px; }
+    .nav-icon-btn {
+      position: relative;
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 10px;
+      transition: background 0.2s;
+    }
+    .nav-icon-btn:hover { background: var(--light); }
+    .badge-dot {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      background: var(--orange);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--light);
+      border-radius: 12px;
+      padding: 7px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--blue);
+      border: none;
+    }
+
+    /* PAGE HEADER */
+    .page-header {
+      background: linear-gradient(135deg, #1e3a8a, #2563EB);
+      padding: 28px 32px;
+      color: white;
+    }
+    .page-header h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+    .page-header p { font-size: 13px; opacity: 0.8; margin: 0; }
+
+    /* MAIN */
+    .main-content { padding: 28px 32px; max-width: 1100px; margin: 0 auto; }
+
+    /* CART LAYOUT */
+    .cart-layout { display: grid; grid-template-columns: 1fr 360px; gap: 24px; }
+
+    /* CART ITEMS */
+    .cart-items-box {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    }
+    .cart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .cart-header h2 { font-size: 18px; font-weight: 800; color: var(--dark); }
+    .btn-clear-cart {
+      background: #fef2f2;
+      color: #dc2626;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+    }
+    .btn-clear-cart:hover { background: #fee2e2; }
+
+    /* CART ITEM ROW */
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid #f8f8f8;
+    }
+    .cart-item:last-child { border-bottom: none; }
+    .item-img {
+      width: 80px;
+      height: 80px;
+      background: var(--light);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .item-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; }
+    .item-info { flex: 1; }
+    .item-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+    .item-price {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--blue);
+    }
+    .item-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .qty-control {
+      display: flex;
+      align-items: center;
+      background: var(--light);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .qty-btn {
+      background: none;
+      border: none;
+      width: 36px;
+      height: 36px;
+      font-size: 18px;
+      cursor: pointer;
+      color: var(--blue);
+      font-weight: 700;
+    }
+    .qty-btn:hover { background: #dbeafe; }
+    .qty-num {
+      min-width: 36px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .btn-remove {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .btn-remove:hover { background: #fef2f2; }
+
+    /* SUMMARY BOX */
+    .summary-box {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      height: fit-content;
+      position: sticky;
+      top: 88px;
+    }
+    .summary-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+    .summary-row .label { color: #64748b; }
+    .summary-row .value { font-weight: 700; color: var(--dark); }
+    .summary-divider { height: 1px; background: #f0f0f0; margin: 16px 0; }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .summary-total .total-price { color: var(--blue); font-size: 22px; }
+
+    .btn-checkout {
+      background: var(--orange);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      width: 100%;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(255,107,0,0.3);
+    }
+    .btn-checkout:hover { background: #e55f00; transform: translateY(-2px); }
+
+    .btn-continue {
+      background: var(--light);
+      color: var(--blue);
+      border: none;
+      border-radius: 14px;
+      padding: 12px;
+      width: 100%;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .btn-continue:hover { background: #dbeafe; }
+
+    .promo-box { margin-top: 16px; }
+    .promo-input-row { display: flex; gap: 8px; margin-top: 8px; }
+    .promo-input {
+      flex: 1;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 13px;
+      outline: none;
+    }
+    .promo-input:focus { border-color: var(--blue); }
+    .btn-apply-promo {
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* EMPTY CART */
+    .empty-cart {
+      text-align: center;
+      padding: 80px 20px;
+    }
+    .empty-cart .icon { font-size: 80px; margin-bottom: 16px; }
+    .empty-cart h3 { font-size: 22px; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
+    .empty-cart p { color: #94a3b8; font-size: 15px; margin-bottom: 24px; }
+    .btn-go-shop {
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 36px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #0f172a;
+      color: #64748b;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 40px;
+    }
+    .footer-logo { font-size: 18px; font-weight: 800; color: white; }
+    .footer-logo span { color: var(--orange); }
+
+    @media (max-width: 768px) {
+      .cart-layout { grid-template-columns: 1fr; }
+      .main-content { padding: 16px; }
+      .navbar { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-logo" onclick="window.location.href='home.html'">
+      <img src="assets/images/logo.png" alt="سهل شوب">
+    </div>
+    <div class="navbar-actions">
+      <button class="nav-icon-btn" onclick="window.location.href='products.html'">🛍️</button>
+      <button class="nav-icon-btn" onclick="window.location.href='orders.html'">📦</button>
+      <button class="nav-user" onclick="window.location.href='profile.html'">
+        👤 <span id="userName">حسابي</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1>🛒 سلة التسوق</h1>
+    <p id="cartSubtitle">جاري التحميل...</p>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content" id="mainContent">
+    <div class="text-center py-5" style="color:#aaa;">
+      <div style="font-size:40px">⏳</div>
+      <p style="margin-top:8px;">جاري التحميل...</p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">سهل<span>شوب</span></div>
+    <p style="margin:0;font-size:13px;">جميع الحقوق محفوظة © 2025</p>
+  </footer>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script src="JS/firebase-config.js"></script>
+
+  <script>
+    // Auth check
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        db.collection("users").doc(user.uid).get().then(doc => {
+          if (doc.exists) {
+            document.getElementById("userName").textContent = doc.data().name.split(" ")[0];
+          }
+        });
+        renderCart();
+      }
+    });
+
+    function getCart() {
+      return JSON.parse(localStorage.getItem("cart")) || [];
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+
+    function renderCart() {
+      const cart = getCart();
+      const main = document.getElementById("mainContent");
+      const subtitle = document.getElementById("cartSubtitle");
+
+      if (cart.length === 0) {
+        subtitle.textContent = "سلتك فارغة";
+        main.innerHTML = `
+          <div class="empty-cart">
+            <div class="icon">🛒</div>
+            <h3>سلتك فارغة!</h3>
+            <p>لم تضف أي منتجات بعد، ابدأ التسوق الآن</p>
+            <a href="products.html" class="btn-go-shop">🛍️ تسوّق الآن</a>
+          </div>`;
+        return;
+      }
+
+      const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+      const itemCount = cart.reduce((s, i) => s + i.qty, 0);
+      subtitle.textContent = `${itemCount} منتج في سلتك`;
+
+      const itemsHTML = cart.map((item, index) => `
+        <div class="cart-item" id="item-${index}">
+          <div class="item-img">
+            ${item.image ? `<img src="${item.image}" alt="${item.name}">` : "🛍️"}
+          </div>
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-price">${Number(item.price).toLocaleString()} دج</div>
+          </div>
+          <div class="item-actions">
+            <div class="qty-control">
+              <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
+              <div class="qty-num">${item.qty}</div>
+              <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+            </div>
+            <button class="btn-remove" onclick="removeItem(${index})" title="حذف">🗑️</button>
+          </div>
+        </div>`).join("");
+
+      main.innerHTML = `
+        <div class="cart-layout">
+          <div class="cart-items-box">
+            <div class="cart-header">
+              <h2>🛒 المنتجات (${itemCount})</h2>
+              <button class="btn-clear-cart" onclick="clearCart()">🗑️ إفراغ السلة</button>
+            </div>
+            ${itemsHTML}
+          </div>
+          <div class="summary-box">
+            <div class="summary-title">ملخص الطلب 📋</div>
+            <div class="summary-row">
+              <span class="label">عدد المنتجات</span>
+              <span class="value">${itemCount} قطعة</span>
+            </div>
+            <div class="summary-row">
+              <span class="label">المجموع الفرعي</span>
+              <span class="value">${Number(total).toLocaleString()} دج</span>
+            </div>
+            <div class="summary-row">
+              <span class="label">رسوم التوصيل</span>
+              <span class="value" style="color:#16a34a;">مجاني 🎉</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-total">
+              <span>الإجمالي</span>
+              <span class="total-price">${Number(total).toLocaleString()} دج</span>
+            </div>
+            <button class="btn-checkout" onclick="window.location.href='checkout.html'">
+              ⚡ إتمام الطلب
+            </button>
+            <button class="btn-continue" onclick="window.location.href='products.html'">
+              ← متابعة التسوق
+            </button>
+            <div class="promo-box">
+              <div style="font-size:13px;font-weight:600;color:#64748b;">كود خصم؟</div>
+              <div class="promo-input-row">
+                <input type="text" class="promo-input" placeholder="أدخل الكود">
+                <button class="btn-apply-promo">تطبيق</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function changeQty(index, val) {
+      let cart = getCart();
+      cart[index].qty = Math.max(1, cart[index].qty + val);
+      saveCart(cart);
+      renderCart();
+    }
+
+    function removeItem(index) {
+      let cart = getCart();
+      cart.splice(index, 1);
+      saveCart(cart);
+      renderCart();
+    }
+
+    function clearCart() {
+      if (confirm("هل تريد إفراغ السلة؟")) {
+        localStorage.removeItem("cart");
+        renderCart();
+      }
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

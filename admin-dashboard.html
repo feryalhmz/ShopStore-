@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سهل شوب - لوحة الإدارة</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * { font-family: 'Cairo', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --blue: #2563EB; --orange: #FF6B00; --dark: #1e293b; --light: #f0f4ff; }
+    body { background: #f8faff; display: flex; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 240px;
+      min-height: 100vh;
+      background: var(--dark);
+      padding: 0;
+      position: fixed;
+      right: 0;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-logo {
+      padding: 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sidebar-logo img { height: 36px; }
+    .sidebar-logo span {
+      font-size: 16px;
+      font-weight: 800;
+      color: white;
+    }
+    .sidebar-logo span b { color: var(--orange); }
+    .sidebar-menu { padding: 16px 12px; flex: 1; }
+    .sidebar-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 8px 12px 4px;
+      margin-top: 8px;
+    }
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: #94a3b8;
+      transition: all 0.2s;
+      text-decoration: none;
+      margin-bottom: 2px;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: right;
+    }
+    .sidebar-item:hover { background: rgba(255,255,255,0.06); color: white; }
+    .sidebar-item.active { background: var(--blue); color: white; }
+    .sidebar-item .s-icon { font-size: 18px; }
+    .sidebar-bottom {
+      padding: 16px 12px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .btn-logout-side {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: #f87171;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: right;
+      transition: background 0.2s;
+    }
+    .btn-logout-side:hover { background: rgba(248,113,113,0.1); }
+
+    /* MAIN */
+    .main { margin-right: 240px; flex: 1; min-height: 100vh; }
+
+    /* TOP BAR */
+    .topbar {
+      background: white;
+      padding: 0 28px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .topbar h1 { font-size: 18px; font-weight: 800; color: var(--dark); }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .admin-badge {
+      background: var(--light);
+      color: var(--blue);
+      border-radius: 10px;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* CONTENT */
+    .content { padding: 28px; }
+
+    /* STAT CARDS */
+    .stat-card {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      height: 100%;
+    }
+    .stat-icon-box {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+    .bg-blue { background: #EFF6FF; }
+    .bg-orange { background: #FFF7ED; }
+    .bg-green { background: #F0FDF4; }
+    .bg-purple { background: #FAF5FF; }
+    .stat-info { flex: 1; }
+    .stat-num { font-size: 28px; font-weight: 900; color: var(--dark); }
+    .stat-label { font-size: 13px; color: #64748b; margin-top: 2px; }
+    .stat-change {
+      font-size: 12px;
+      font-weight: 700;
+      color: #16a34a;
+      margin-top: 4px;
+    }
+
+    /* CHARTS */
+    .chart-card {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      height: 100%;
+    }
+    .chart-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 20px;
+    }
+
+    /* RECENT ORDERS TABLE */
+    .table-card {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      margin-top: 24px;
+    }
+    .table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .table-header h3 { font-size: 16px; font-weight: 800; color: var(--dark); }
+    .btn-see-all {
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 600;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: right;
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    td {
+      padding: 14px;
+      font-size: 14px;
+      color: var(--dark);
+      border-bottom: 1px solid #f8f8f8;
+    }
+    tr:last-child td { border-bottom: none; }
+    .status-pill {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .pill-pending { background: #FFF7ED; color: #EA580C; }
+    .pill-confirmed { background: #EFF6FF; color: #2563EB; }
+    .pill-shipped { background: #F0FDF4; color: #16A34A; }
+    .pill-delivered { background: #DCFCE7; color: #15803D; }
+    .pill-cancelled { background: #FEF2F2; color: #DC2626; }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <img src="assets/images/logo.png" alt="">
+      <span>سهل<b>شوب</b></span>
+    </div>
+    <div class="sidebar-menu">
+      <div class="sidebar-label">القائمة الرئيسية</div>
+      <a class="sidebar-item active" href="admin-dashboard.html">
+        <span class="s-icon">📊</span> لوحة التحكم
+      </a>
+      <a class="sidebar-item" href="admin-products.html">
+        <span class="s-icon">📦</span> المنتجات
+      </a>
+      <a class="sidebar-item" href="admin-orders.html">
+        <span class="s-icon">🛒</span> الطلبات
+      </a>
+      <div class="sidebar-label">أخرى</div>
+      <a class="sidebar-item" href="home.html">
+        <span class="s-icon">🏠</span> المتجر
+      </a>
+      <a class="sidebar-item" href="profile.html">
+        <span class="s-icon">👤</span> حسابي
+      </a>
+    </div>
+    <div class="sidebar-bottom">
+      <button class="btn-logout-side" onclick="logout()">
+        <span>🚪</span> تسجيل الخروج
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <h1>📊 لوحة التحكم</h1>
+      <div class="topbar-right">
+        <div class="admin-badge">👑 مدير: <span id="adminName">...</span></div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- STAT CARDS -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon-box bg-blue">📦</div>
+            <div class="stat-info">
+              <div class="stat-num" id="statProducts">0</div>
+              <div class="stat-label">المنتجات</div>
+              <div class="stat-change">↑ نشط</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon-box bg-orange">🛒</div>
+            <div class="stat-info">
+              <div class="stat-num" id="statOrders">0</div>
+              <div class="stat-label">الطلبات</div>
+              <div class="stat-change">↑ إجمالي</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon-box bg-green">👥</div>
+            <div class="stat-info">
+              <div class="stat-num" id="statUsers">0</div>
+              <div class="stat-label">المستخدمون</div>
+              <div class="stat-change">↑ مسجل</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon-box bg-purple">💰</div>
+            <div class="stat-info">
+              <div class="stat-num" id="statRevenue">0</div>
+              <div class="stat-label">الإيرادات (دج)</div>
+              <div class="stat-change">↑ إجمالي</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHARTS -->
+      <div class="row g-3 mb-0">
+        <div class="col-md-8">
+          <div class="chart-card">
+            <div class="chart-title">📈 الطلبات حسب الحالة</div>
+            <canvas id="ordersChart" height="120"></canvas>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="chart-card">
+            <div class="chart-title">🏷️ المنتجات حسب الفئة</div>
+            <canvas id="categoriesChart" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECENT ORDERS -->
+      <div class="table-card">
+        <div class="table-header">
+          <h3>🕐 آخر الطلبات</h3>
+          <button class="btn-see-all" onclick="window.location.href='admin-orders.html'">
+            عرض الكل ←
+          </button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>رقم الطلب</th>
+                <th>العميل</th>
+                <th>المبلغ</th>
+                <th>الحالة</th>
+                <th>التاريخ</th>
+              </tr>
+            </thead>
+            <tbody id="recentOrdersTable">
+              <tr><td colspan="5" style="text-align:center;color:#aaa;padding:24px;">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script src="JS/firebase-config.js"></script>
+
+  <script>
+    auth.onAuthStateChanged(user => {
+      if (!user) { window.location.href = "login.html"; return; }
+      db.collection("users").doc(user.uid).get().then(doc => {
+        if (!doc.exists || doc.data().role !== "admin") {
+          window.location.href = "home.html"; return;
+        }
+        document.getElementById("adminName").textContent = doc.data().name.split(" ")[0];
+        loadStats();
+        loadRecentOrders();
+      });
+    });
+
+    function loadStats() {
+      // Products count
+      db.collection("products").get().then(s => {
+        document.getElementById("statProducts").textContent = s.size;
+        buildCategoryChart(s);
+      });
+
+      // Orders + revenue + status
+      db.collection("orders").get().then(s => {
+        let revenue = 0;
+        let statusCount = { pending: 0, confirmed: 0, shipped: 0, delivered: 0, cancelled: 0 };
+        s.forEach(doc => {
+          revenue += doc.data().total || 0;
+          const st = doc.data().status || "pending";
+          if (statusCount[st] !== undefined) statusCount[st]++;
+        });
+        document.getElementById("statOrders").textContent = s.size;
+        document.getElementById("statRevenue").textContent = Number(revenue).toLocaleString();
+        buildOrdersChart(statusCount);
+      });
+
+      // Users count
+      db.collection("users").get().then(s => {
+        document.getElementById("statUsers").textContent = s.size;
+      });
+    }
+
+    function buildOrdersChart(data) {
+      new Chart(document.getElementById("ordersChart"), {
+        type: "bar",
+        data: {
+          labels: ["قيد الانتظار", "مؤكد", "قيد التوصيل", "تم التسليم", "ملغي"],
+          datasets: [{
+            label: "عدد الطلبات",
+            data: [data.pending, data.confirmed, data.shipped, data.delivered, data.cancelled],
+            backgroundColor: ["#FED7AA", "#BFDBFE", "#A7F3D0", "#6EE7B7", "#FECACA"],
+            borderColor: ["#FF6B00", "#2563EB", "#16A34A", "#15803D", "#DC2626"],
+            borderWidth: 2,
+            borderRadius: 8,
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+      });
+    }
+
+    function buildCategoryChart(snapshot) {
+      const cats = {};
+      snapshot.forEach(doc => {
+        const cat = doc.data().category || "أخرى";
+        cats[cat] = (cats[cat] || 0) + 1;
+      });
+      new Chart(document.getElementById("categoriesChart"), {
+        type: "doughnut",
+        data: {
+          labels: Object.keys(cats),
+          datasets: [{
+            data: Object.values(cats),
+            backgroundColor: ["#BFDBFE","#FED7AA","#A7F3D0","#DDD6FE","#FDE68A","#FECACA"],
+            borderWidth: 0,
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: "bottom", labels: { font: { family: "Cairo", size: 12 } } } }
+        }
+      });
+    }
+
+    function loadRecentOrders() {
+      db.collection("orders").limit(6).get().then(snapshot => {
+        const tbody = document.getElementById("recentOrdersTable");
+        if (snapshot.empty) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#aaa;padding:24px;">لا توجد طلبات بعد</td></tr>`;
+          return;
+        }
+        const statusMap = {
+          pending: ["pill-pending","قيد الانتظار"],
+          confirmed: ["pill-confirmed","مؤكد"],
+          shipped: ["pill-shipped","قيد التوصيل"],
+          delivered: ["pill-delivered","تم التسليم"],
+          cancelled: ["pill-cancelled","ملغي"]
+        };
+        tbody.innerHTML = snapshot.docs.map(doc => {
+          const o = doc.data();
+          const [cls, label] = statusMap[o.status] || statusMap.pending;
+          const date = o.createdAt ? o.createdAt.toDate().toLocaleDateString("ar-DZ") : "—";
+          const name = o.shippingAddress?.fullName || "—";
+          return `<tr>
+            <td style="font-weight:700;color:var(--blue);">#${doc.id.substring(0,8).toUpperCase()}</td>
+            <td>${name}</td>
+            <td style="font-weight:700;">${Number(o.total).toLocaleString()} دج</td>
+            <td><span class="status-pill ${cls}">${label}</span></td>
+            <td style="color:#94a3b8;">${date}</td>
+          </tr>`;
+        }).join("");
+      });
+    }
+
+    function logout() {
+      auth.signOut().then(() => {
+        localStorage.removeItem("cart");
+        window.location.href = "index.html";
+      });
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

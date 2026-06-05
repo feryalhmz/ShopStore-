@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> سهل شوب - تسجيل الدخول</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Cairo', sans-serif; }
+
+    body {
+      background: #f0f2f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-card {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: 700;
+      color: #FF6B00;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #888;
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    .form-label {
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .form-control {
+      border-radius: 10px;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .form-control:focus {
+      border-color: #FF6B00;
+      box-shadow: 0 0 0 3px rgba(255,107,0,0.1);
+    }
+
+    .btn-login {
+      background: #2563EB;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      width: 100%;
+      font-family: 'Cairo', sans-serif;
+      margin-top: 8px;
+    }
+
+    .btn-login:hover {
+      background: #2563EB;
+      color: white;
+    }
+
+    .divider {
+      text-align: center;
+      color: #aaa;
+      font-size: 13px;
+      margin: 16px 0;
+    }
+
+    .register-link {
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .register-link a {
+      color: #2563EB;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+
+    .error-msg {
+      background: #fff0f0;
+      color: #cc0000;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-card">
+    <div class="logo">سهل شوب🛍️</div>
+    <div class="subtitle">سجّل دخولك للمتابعة</div>
+
+    <div class="error-msg" id="errorMsg">❌ البريد الإلكتروني أو كلمة المرور غير صحيحة</div>
+
+    <div class="mb-3">
+      <label class="form-label">البريد الإلكتروني</label>
+      <input type="email" class="form-control" id="email" placeholder="example@email.com">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">كلمة المرور</label>
+      <input type="password" class="form-control" id="password" placeholder="••••••••">
+    </div>
+
+    <button class="btn-login" onclick="login()">تسجيل الدخول</button>
+
+    <div class="divider">── أو ──</div>
+
+    <div class="register-link">
+      ليس لديك حساب؟ <a href="register.html">إنشاء حساب جديد</a>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script src="JS/firebase-config.js"></script>
+
+  <script>
+    // ── CONSTANTS ────────────────────────────────────────────────
+    const ADMIN_EMAIL    = "admin@gmail.com";
+    const ADMIN_PASSWORD = "admin1";
+
+    // ── ROLE-BASED REDIRECT ───────────────────────────────────────
+    // Always reads role from Firestore (server-side source of truth).
+    // If the logged-in email is the reserved admin email, the role is
+    // enforced as "admin" in Firestore before redirecting — this
+    // prevents any frontend manipulation from downgrading the account.
+    function redirectByRole(user) {
+      const ref = db.collection("users").doc(user.uid);
+      ref.get().then(doc => {
+        const isAdminEmail = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
+        if (isAdminEmail) {
+          // Always enforce admin role for this email — write if missing or wrong
+          const currentRole = doc.exists ? doc.data().role : null;
+          const fix = (currentRole !== "admin")
+            ? ref.set({ name: "Admin", email: ADMIN_EMAIL, role: "admin",
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true })
+            : Promise.resolve();
+          fix.then(() => { window.location.href = "admin-dashboard.html"; });
+          return;
+        }
+
+        if (!doc.exists) { window.location.href = "home.html"; return; }
+        const r = doc.data().role;
+        if (r === "admin")        window.location.href = "admin-dashboard.html";
+        else if (r === "seller")  window.location.href = "seller-dashboard.html";
+        else                      window.location.href = "home.html";
+      });
+    }
+
+    // ── AUTO-CREATE ADMIN ACCOUNT IF MISSING ─────────────────────
+    // Called once on page load. Tries to sign in silently; if the
+    // account doesn't exist yet, creates it in Auth + Firestore.
+    // Uses a secondary app instance so it never disturbs the main
+    // auth state (no unwanted redirect if a normal user is on the page).
+    function ensureAdminAccount() {
+      // We test by trying to fetch sign-in methods for the email.
+      // If the array is empty the account doesn't exist → create it.
+      auth.fetchSignInMethodsForEmail(ADMIN_EMAIL).then(methods => {
+        if (methods.length === 0) {
+          // Account missing — create it
+          auth.createUserWithEmailAndPassword(ADMIN_EMAIL, ADMIN_PASSWORD)
+            .then(cred => {
+              return db.collection("users").doc(cred.user.uid).set({
+                name: "Admin",
+                email: ADMIN_EMAIL,
+                role: "admin",
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+              });
+            })
+            .then(() => {
+              // Sign back out immediately — we only wanted to create the account,
+              // not log in as admin automatically
+              return auth.signOut();
+            })
+            .catch(() => {/* silent — may fail if another tab beat us to it */});
+        } else {
+          // Account exists — make sure its Firestore role is "admin"
+          // (handles the edge case where someone manually changed it)
+          auth.signInWithEmailAndPassword(ADMIN_EMAIL, ADMIN_PASSWORD)
+            .then(cred => {
+              return db.collection("users").doc(cred.user.uid)
+                .set({ role: "admin" }, { merge: true })
+                .then(() => auth.signOut());
+            })
+            .catch(() => {/* wrong password or other error — ignore */});
+        }
+      }).catch(() => {/* network error or quota — ignore */});
+    }
+
+    // Run admin check on page load (only if no user is currently logged in
+    // to avoid signing out an active session)
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        redirectByRole(user);
+      } else {
+        ensureAdminAccount();
+      }
+    });
+
+    // ── LOGIN HANDLER ─────────────────────────────────────────────
+    function login() {
+      const email    = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorMsg = document.getElementById("errorMsg");
+
+      errorMsg.style.display = "none";
+
+      if (!email || !password) {
+        errorMsg.textContent = "❌ يرجى ملء جميع الحقول";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      // Show loading state
+      const btn = document.querySelector(".btn-login");
+      btn.disabled = true;
+      btn.textContent = "جاري التحقق...";
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(result => { redirectByRole(result.user); })
+        .catch(() => {
+          errorMsg.textContent = "❌ البريد الإلكتروني أو كلمة المرور غير صحيحة";
+          errorMsg.style.display = "block";
+          btn.disabled = false;
+          btn.textContent = "تسجيل الدخول";
+        });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>شوب - إنشاء حساب</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Cairo', sans-serif; }
+
+    body {
+      background: #f0f2f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 0;
+    }
+
+    .register-card {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: 700;
+      color: #FF6B00;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #888;
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    .form-label {
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .form-control {
+      border-radius: 10px;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .form-control:focus {
+      border-color: #2563EB;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+
+    .btn-register {
+      background: #2563EB;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      width: 100%;
+      font-family: 'Cairo', sans-serif;
+      margin-top: 8px;
+    }
+
+    .btn-register:hover {
+      background: #1d4ed8;
+      color: white;
+    }
+
+    .divider {
+      text-align: center;
+      color: #aaa;
+      font-size: 13px;
+      margin: 16px 0;
+    }
+
+    .login-link {
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .login-link a {
+      color: #2563EB;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .login-link a:hover { text-decoration: underline; }
+
+    .error-msg {
+      background: #fff0f0;
+      color: #cc0000;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .success-msg {
+      background: #f0fff4;
+      color: #166534;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-card">
+    <div class="logo">سهل شوب🛍️</div>
+    <div class="subtitle" id="pageSubtitle">إنشاء حساب جديد</div>
+    <div id="roleIndicator" style="display:none;text-align:center;margin-bottom:16px;padding:10px 16px;border-radius:10px;font-size:14px;font-weight:600;"></div>
+
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="success-msg" id="successMsg">✅ تم إنشاء الحساب بنجاح! جاري التحويل...</div>
+
+    <div class="mb-3">
+      <label class="form-label">الاسم الكامل</label>
+      <input type="text" class="form-control" id="name" placeholder="أدخل اسمك الكامل">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">البريد الإلكتروني</label>
+      <input type="email" class="form-control" id="email" placeholder="example@email.com">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">كلمة المرور</label>
+      <input type="password" class="form-control" id="password" placeholder="••••••••">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">تأكيد كلمة المرور</label>
+      <input type="password" class="form-control" id="confirmPassword" placeholder="••••••••">
+    </div>
+
+    <button class="btn-register" onclick="register()">إنشاء الحساب</button>
+
+    <div class="divider">── أو ──</div>
+
+    <div class="login-link">
+      لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script src="JS/firebase-config.js"></script>
+
+  <script>
+    const ADMIN_EMAIL = "admin@gmail.com";
+
+    // Determine registration type from URL param
+    const params = new URLSearchParams(window.location.search);
+    const regType = params.get("type"); // "buyer", "seller", or null
+
+    // Set role and redirect destination based on type
+    const isSeller = regType === "seller";
+    // Never allow admin role through registration regardless of URL manipulation
+    const role = isSeller ? "seller" : "user";
+    const redirectAfterAuth = isSeller ? "seller-dashboard.html" : "home.html";
+
+    // Update UI based on type
+    if (isSeller) {
+      document.getElementById("pageSubtitle").textContent = "إنشاء حساب بائع";
+      const indicator = document.getElementById("roleIndicator");
+      indicator.style.display = "block";
+      indicator.style.background = "#fff7ed";
+      indicator.style.color = "#c2410c";
+      indicator.style.border = "1px solid #fed7aa";
+      indicator.textContent = "🏪 أنت تسجل كبائع — ستتمكن من إدارة منتجاتك";
+    } else if (regType === "buyer") {
+      document.getElementById("pageSubtitle").textContent = "إنشاء حساب مشترٍ";
+      const indicator = document.getElementById("roleIndicator");
+      indicator.style.display = "block";
+      indicator.style.background = "#eff6ff";
+      indicator.style.color = "#1d4ed8";
+      indicator.style.border = "1px solid #bfdbfe";
+      indicator.textContent = "🛍️ أنت تسجل كمشترٍ — تسوّق من أفضل المنتجات";
+    }
+
+    // If already logged in, redirect based on role in Firestore
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        db.collection("users").doc(user.uid).get().then(doc => {
+          if (doc.exists) {
+            const r = doc.data().role;
+            if (r === "admin") window.location.href = "admin-dashboard.html";
+            else if (r === "seller") window.location.href = "seller-dashboard.html";
+            else window.location.href = "home.html";
+          } else {
+            window.location.href = "home.html";
+          }
+        });
+      }
+    });
+
+    function register() {
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const confirmPassword = document.getElementById("confirmPassword").value.trim();
+      const errorMsg = document.getElementById("errorMsg");
+      const successMsg = document.getElementById("successMsg");
+
+      errorMsg.style.display = "none";
+      successMsg.style.display = "none";
+
+      if (!name || !email || !password || !confirmPassword) {
+        errorMsg.textContent = "❌ يرجى ملء جميع الحقول";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+        errorMsg.textContent = "❌ هذا البريد الإلكتروني محجوز ولا يمكن التسجيل به";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      if (password.length < 6) {
+        errorMsg.textContent = "❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        errorMsg.textContent = "❌ كلمتا المرور غير متطابقتين";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(cred => {
+          return db.collection("users").doc(cred.user.uid).set({
+            name: name,
+            email: email,
+            role: role,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        })
+        .then(() => {
+          successMsg.style.display = "block";
+          setTimeout(() => { window.location.href = redirectAfterAuth; }, 1000);
+        })
+        .catch(error => {
+          if (error.code === "auth/email-already-in-use") {
+            errorMsg.textContent = "❌ هذا البريد الإلكتروني مستخدم بالفعل";
+          } else {
+            errorMsg.textContent = "❌ حدث خطأ، يرجى المحاولة مرة أخرى";
+          }
+          errorMsg.style.display = "block";
+        });
+    }
+  </script>
+
+</body>
+</html>

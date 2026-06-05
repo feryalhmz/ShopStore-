@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>شوب - تسوّق بسهولة</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Cairo', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --blue: #2563EB;
+      --dark-blue: #1e40af;
+      --yellow: #FF6B00;
+      --light: #f0f4ff;
+    }
+
+    body { background: #f8faff; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      background: white;
+      padding: 0 32px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(37,99,235,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar-logo img { height: 44px; }
+
+    .navbar-search {
+      flex: 1;
+      max-width: 420px;
+      margin: 0 32px;
+      position: relative;
+    }
+
+    .navbar-search input {
+      width: 100%;
+      border: 2px solid #e8eef8;
+      border-radius: 12px;
+      padding: 10px 18px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .navbar-search input:focus { border-color: var(--blue); }
+
+    .navbar-search .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #aaa;
+      font-size: 18px;
+    }
+
+    .navbar-actions { display: flex; align-items: center; gap: 8px; }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 10px;
+      color: #555;
+      transition: background 0.2s;
+    }
+
+    .nav-btn:hover { background: var(--light); color: var(--blue); }
+
+    .btn-nav-login {
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 22px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-nav-login:hover { background: var(--dark-blue); color: white; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563EB 50%, #3b82f6 100%);
+      min-height: 520px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 40px 32px;
+    }
+
+    /* decorative circles */
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+      top: -150px;
+      left: -100px;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+      bottom: -80px;
+      right: 200px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 520px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,193,7,0.2);
+      color: var(--yellow);
+      border: 1px solid rgba(255,193,7,0.4);
+      border-radius: 20px;
+      padding: 6px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      font-weight: 900;
+      color: white;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 span { color: var(--yellow); }
+
+    .hero p {
+      font-size: 17px;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .btn-hero-primary {
+      background: var(--yellow);
+      color: #1e293b;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(255,193,7,0.4);
+    }
+
+    .btn-hero-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255,193,7,0.5);
+      color: #1e293b;
+    }
+
+    .btn-hero-outline {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255,255,255,0.6);
+      border-radius: 12px;
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-hero-outline:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: white;
+      color: white;
+    }
+
+    /* hero right side */
+    .hero-visual {
+      position: absolute;
+      left: 60px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+
+    .hero-visual img {
+      height: 200px;
+      opacity: 0.25;
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
+    }
+
+    /* floating tags */
+    .float-tag {
+      position: absolute;
+      background: white;
+      border-radius: 14px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      z-index: 3;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e293b;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .float-tag-1 { top: 80px; left: 80px; animation-delay: 0s; }
+    .float-tag-2 { bottom: 100px; left: 200px; animation-delay: 1s; }
+    .float-tag-3 { top: 120px; left: 320px; animation-delay: 0.5s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .float-tag .tag-icon { font-size: 22px; }
+    .float-tag .tag-num { font-size: 16px; font-weight: 800; color: var(--blue); }
+
+    /* ── STATS ── */
+    .stats {
+      background: white;
+      padding: 0;
+      margin: 0 40px;
+      margin-top: -28px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(37,99,235,0.1);
+      position: relative;
+      z-index: 10;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .stat-item {
+      flex: 1;
+      text-align: center;
+      padding: 24px 16px;
+      border-left: 1px solid #f0f4ff;
+    }
+
+    .stat-item:last-child { border: none; }
+    .stat-num { font-size: 28px; font-weight: 800; color: var(--blue); }
+    .stat-label { font-size: 13px; color: #64748b; margin-top: 2px; }
+
+    /* ── CATEGORIES ── */
+    .categories { padding: 60px 40px 40px; }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 6px;
+    }
+
+    .section-sub {
+      font-size: 14px;
+      color: #64748b;
+      margin-bottom: 32px;
+    }
+
+    .cat-card {
+      background: white;
+      border-radius: 20px;
+      padding: 28px 16px;
+      text-align: center;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-decoration: none;
+      display: block;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+
+    .cat-card:hover {
+      border-color: var(--blue);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(37,99,235,0.12);
+    }
+
+    .cat-icon { font-size: 42px; margin-bottom: 12px; }
+    .cat-name { font-size: 15px; font-weight: 700; color: #1e293b; }
+    .cat-count { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+
+    /* ── WHY US ── */
+    .why-us {
+      background: linear-gradient(135deg, #f0f4ff, #e8eeff);
+      padding: 60px 40px;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 20px;
+      padding: 32px 24px;
+      text-align: center;
+      height: 100%;
+      box-shadow: 0 4px 16px rgba(37,99,235,0.06);
+      transition: transform 0.2s;
+    }
+
+    .feature-card:hover { transform: translateY(-4px); }
+
+    .feature-icon-wrap {
+      width: 72px;
+      height: 72px;
+      background: var(--light);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 16px;
+    }
+
+    .feature-card h5 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p { font-size: 13px; color: #64748b; margin: 0; line-height: 1.7; }
+
+    /* ── CTA ── */
+    .cta {
+      background: linear-gradient(135deg, #1e3a8a, #2563EB);
+      padding: 70px 40px;
+      text-align: center;
+      color: white;
+    }
+
+    .cta h2 { font-size: 34px; font-weight: 800; margin-bottom: 12px; }
+    .cta p { font-size: 16px; opacity: 0.85; margin-bottom: 32px; }
+
+    .btn-cta {
+      background: var(--yellow);
+      color: #1e293b;
+      border: none;
+      border-radius: 14px;
+      padding: 16px 44px;
+      font-size: 17px;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(255,193,7,0.5);
+      transition: transform 0.2s;
+      display: inline-block;
+    }
+
+    .btn-cta:hover { transform: translateY(-3px); color: #1e293b; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0f172a;
+      color: #64748b;
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    footer .footer-logo { font-size: 20px; font-weight: 800; color: white; }
+    footer .footer-logo span { color: var(--yellow); }
+    footer a { color: #64748b; text-decoration: none; margin-right: 16px; }
+    footer a:hover { color: white; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-logo">
+      <img src="assets/images/logo.png" alt="Sahelshop">
+    </div>
+    <div class="navbar-search">
+      <input type="text" placeholder="ابحث عن منتجات، ماركات...">
+      <span class="search-icon">🔍</span>
+    </div>
+    <div class="navbar-actions">
+      <button class="nav-btn" title="المفضلة">🤍</button>
+      <button class="nav-btn" title="السلة">🛒</button>
+      <a href="login.html" class="btn-nav-login">تسجيل الدخول</a>
+      <a href="register.html?type=buyer" style="background:var(--light);color:var(--blue);border:none;border-radius:10px;padding:9px 22px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:600;text-decoration:none;">إنشاء حساب</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">✨ منصة التسوق الذكي في الجزائر</div>
+      <h1>كل ما تحتاجه<br>في مكان <span>واحد</span></h1>
+      <p>بيع ذكي بإرجاع و تخزين آمن 💼<br>تسوّق من أفضل المنتجات بأسعار لا تُقاوم</p>
+       <div class="hero-btns">
+  <a href="register.html?type=buyer" class="btn-hero-primary">🛍️ أريد التسوق</a>
+  <a href="register.html?type=seller" class="btn-hero-outline" style="background:rgba(255,107,0,0.15);border-color:var(--yellow);">🏪 أريد البيع</a>
+</div>
+<div style="margin-top:16px;">
+  <a href="login.html" style="color:rgba(255,255,255,0.7);font-size:13px;text-decoration:none;">
+    لديك حساب بالفعل؟ <span style="color:white;font-weight:700;text-decoration:underline;">تسجيل الدخول</span>
+  </a>
+</div>
+    </div><!-- end hero-content -->
+
+    <!-- Floating Tags -->
+    <div class="float-tag float-tag-1">
+      <span class="tag-icon">📦</span>
+      <div>
+        <div class="tag-num">+500</div>
+        <div>منتج متاح</div>
+      </div>
+    </div>
+    <div class="float-tag float-tag-2">
+      <span class="tag-icon">🚚</span>
+      <div>
+        <div class="tag-num">48h</div>
+        <div>توصيل سريع</div>
+      </div>
+    </div>
+    <div class="float-tag float-tag-3">
+      <span class="tag-icon">⭐</span>
+      <div>
+        <div class="tag-num">4.9</div>
+        <div>تقييم العملاء</div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-item">
+            <div class="stat-label">عميل راضٍ</div>
+    </div>
+    <div class="stat-item">
+           <div class="stat-label">منتج متنوع</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">48h</div>
+      <div class="stat-label">متوسط التوصيل</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">58</div>
+      <div class="stat-label">ولاية مغطاة</div>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <section class="categories">
+    <div class="section-title">تسوّق حسب الفئة</div>
+    <div class="section-sub">اكتشف مئات المنتجات في كل فئة</div>
+    <div class="row g-3">
+      <div class="col-6 col-md-2">
+        <a href="register.html?type=buyer" class="cat-card">
+          <div class="cat-icon">👕</div>
+          <div class="cat-name">ملابس رجالية</div>
+          <div class="cat-count">+120 منتج</div>
+        </a>
+      </div>
+      <div class="col-6 col-md-2">
+        <a href="register.html?type=buyer" class="cat-card">
+          <div class="cat-icon">👗</div>
+          <div class="cat-name">ملابس نسائية</div>
+          <div class="cat-count">+85 منتج</div>
+        </a>
+      </div>
+      <div class="col-6 col-md-2">
+        <a href="register.html?type=buyer" class="cat-card">
+          <div class="cat-icon">👟</div>
+          <div class="cat-name">أحذية</div>
+          <div class="cat-count">+60 منتج</div>
+        </a>
+      </div>
+      <div class="col-6 col-md-2">
+        <a href="register.html?type=buyer" class="cat-card">
+          <div class="cat-icon">👜</div>
+          <div class="cat-name">حقائب</div>
+          <div class="cat-count">+45 منتج</div>
+        </a>
+      </div>
+      <div class="col-6 col-md-2">
+        <a href="register.html?type=buyer" class="cat-card">
+          <div class="cat-icon">🧸</div>
+          <div class="cat-name">أطفال</div>
+          <div class="cat-count">+90 منتج</div>
+        </a>
+      </div>
+      <div class="col-6 col-md-2">
+        <a href="register.html?type=buyer" class="cat-card">
+          <div class="cat-icon">⌚</div>
+          <div class="cat-name">إكسسوارات</div>
+          <div class="cat-count">+70 منتج</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="why-us">
+    <div class="text-center mb-4">
+      <div class="section-title">لماذا تختار سهل شوب؟</div>
+      <div class="section-sub">نقدم لك أفضل تجربة تسوق إلكتروني</div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-3 col-6">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🚚</div>
+          <h5>توصيل سريع</h5>
+          <p>توصيل لجميع ولايات الجزائر خلال 48 ساعة</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">💰</div>
+          <h5>أفضل الأسعار</h5>
+          <p>منتجات عالية الجودة بأسعار تنافسية ومضمونة</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🔒</div>
+          <h5>تخزين آمن</h5>
+          <p>نظام تخزين متطور يحمي بياناتك ومشترياتك</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">↩️</div>
+          <h5>إرجاع مضمون</h5>
+          <p>سياسة إرجاع مرنة وسهلة خلال 7 أيام</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <h2>جاهز للتسوق؟ 🛍️</h2>
+    <p>انضم لآلاف العملاء الراضين وابدأ تجربتك الآن</p>
+    <a href="register.html?type=buyer" class="btn-cta">إنشاء حساب مجاني</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">سهل<span>شوب</span></div>
+    <div>جميع الحقوق محفوظة © 2026</div>
+    <div>
+      <a href="login.html">تسجيل الدخول</a>
+      <a href="register.html">إنشاء حساب</a>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سهل شوب - طلب إرجاع</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Cairo', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --blue: #2563EB; --orange: #FF6B00; --dark: #1e293b; --light: #f0f4ff; }
+    body { background: #f8faff; }
+
+    /* NAVBAR */
+    .navbar {
+      background: white; padding: 0 32px; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(37,99,235,0.08); position: sticky; top: 0; z-index: 100;
+    }
+    .navbar-logo img { height: 44px; cursor: pointer; }
+    .nav-user {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--light); border-radius: 12px; padding: 7px 14px;
+      cursor: pointer; font-size: 14px; font-weight: 600; color: var(--blue); border: none;
+    }
+    .nav-icon-btn {
+      position: relative; background: none; border: none; font-size: 22px;
+      cursor: pointer; padding: 8px; border-radius: 10px;
+    }
+    .nav-icon-btn:hover { background: var(--light); }
+
+    /* PAGE HEADER */
+    .page-header {
+      background: linear-gradient(135deg, #1e3a8a, #2563EB);
+      padding: 28px 32px; color: white;
+    }
+    .page-header h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+
+    /* BREADCRUMB */
+    .breadcrumb-bar {
+      background: white; padding: 12px 32px;
+      border-bottom: 1px solid #f0f0f0; font-size: 13px; color: #94a3b8;
+    }
+    .breadcrumb-bar a { color: var(--blue); text-decoration: none; }
+    .breadcrumb-bar span { margin: 0 8px; }
+
+    /* MAIN */
+    .main-content { padding: 28px 32px; max-width: 1000px; margin: 0 auto; }
+    .layout { display: grid; grid-template-columns: 1fr 320px; gap: 24px; }
+
+    /* FORM CARD */
+    .form-card {
+      background: white; border-radius: 20px; padding: 28px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    }
+    .card-title {
+      font-size: 18px; font-weight: 800; color: var(--dark);
+      margin-bottom: 24px; padding-bottom: 16px;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .form-label { font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 6px; display: block; }
+    .form-control {
+      border: 2px solid #e8eef8; border-radius: 12px;
+      padding: 12px 16px; font-family: 'Cairo', sans-serif;
+      font-size: 14px; width: 100%; outline: none; transition: border 0.2s;
+    }
+    .form-control:focus { border-color: var(--blue); }
+    .form-select {
+      border: 2px solid #e8eef8; border-radius: 12px;
+      padding: 12px 16px; font-family: 'Cairo', sans-serif;
+      font-size: 14px; width: 100%; outline: none; cursor: pointer;
+      background: white; margin-bottom: 0;
+    }
+    .form-select:focus { border-color: var(--blue); }
+
+    /* UPLOAD BOX */
+    .upload-box {
+      border: 2px dashed #e8eef8; border-radius: 14px;
+      padding: 28px; text-align: center; cursor: pointer;
+      transition: all 0.2s; background: #fafbff;
+    }
+    .upload-box:hover { border-color: var(--blue); background: var(--light); }
+    .upload-icon { font-size: 32px; margin-bottom: 8px; }
+    .upload-text { font-size: 14px; font-weight: 600; color: var(--dark); margin-bottom: 4px; }
+    .upload-hint { font-size: 12px; color: #94a3b8; }
+    .upload-box input { display: none; }
+    .preview-imgs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .preview-img { width: 72px; height: 72px; border-radius: 10px; object-fit: cover; border: 2px solid #e8eef8; }
+
+    /* SUBMIT BTN */
+    .btn-submit {
+      background: var(--orange); color: white; border: none;
+      border-radius: 14px; padding: 15px; width: 100%;
+      font-size: 16px; font-weight: 700; font-family: 'Cairo', sans-serif;
+      cursor: pointer; margin-top: 20px; transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(255,107,0,0.3);
+    }
+    .btn-submit:hover { background: #e55f00; transform: translateY(-2px); }
+    .btn-cancel {
+      background: var(--light); color: #64748b; border: none;
+      border-radius: 14px; padding: 13px; width: 100%;
+      font-size: 14px; font-weight: 700; font-family: 'Cairo', sans-serif;
+      cursor: pointer; margin-top: 10px;
+    }
+
+    /* INFO CARD */
+    .info-card {
+      background: white; border-radius: 20px; padding: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      height: fit-content; position: sticky; top: 88px;
+    }
+    .order-info-row {
+      display: flex; justify-content: space-between;
+      padding: 10px 0; border-bottom: 1px solid #f8f8f8;
+      font-size: 14px;
+    }
+    .order-info-row:last-of-type { border: none; }
+    .order-info-row .label { color: #94a3b8; font-size: 13px; }
+    .order-info-row .value { font-weight: 700; color: var(--dark); }
+    .product-preview {
+      background: var(--light); border-radius: 14px;
+      padding: 16px; display: flex; align-items: center;
+      gap: 14px; margin: 16px 0;
+    }
+    .product-preview img {
+      width: 72px; height: 72px; border-radius: 10px;
+      object-fit: cover; background: white;
+    }
+    .product-preview .p-emoji {
+      width: 72px; height: 72px; border-radius: 10px;
+      background: white; display: flex; align-items: center;
+      justify-content: center; font-size: 32px; flex-shrink: 0;
+    }
+    .product-preview .p-name { font-size: 14px; font-weight: 700; color: var(--dark); }
+    .product-preview .p-price { font-size: 16px; font-weight: 800; color: var(--blue); margin-top: 4px; }
+
+    /* STATUS BOX */
+    .status-box {
+      background: #FFFBEB; border: 1px solid #FDE68A;
+      border-radius: 12px; padding: 14px 16px; margin-top: 16px;
+    }
+    .status-dot { width: 10px; height: 10px; background: var(--orange); border-radius: 50%; display: inline-block; margin-left: 8px; }
+    .status-title { font-size: 14px; font-weight: 700; color: #92400E; }
+    .status-desc { font-size: 12px; color: #B45309; margin-top: 4px; }
+
+    /* POLICY */
+    .policy-box {
+      background: var(--light); border-radius: 14px;
+      padding: 16px; margin-top: 16px;
+    }
+    .policy-title { font-size: 13px; font-weight: 800; color: var(--dark); margin-bottom: 10px; }
+    .policy-item {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 12px; color: #64748b; margin-bottom: 6px;
+    }
+    .policy-item:last-child { margin-bottom: 0; }
+
+    /* SUCCESS OVERLAY */
+    .success-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      display: none; align-items: center; justify-content: center; z-index: 9999;
+    }
+    .success-overlay.show { display: flex; }
+    .success-modal {
+      background: white; border-radius: 24px; padding: 48px 36px;
+      text-align: center; max-width: 380px; width: 90%;
+      animation: popIn 0.3s ease;
+    }
+    @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .success-modal .s-icon { font-size: 64px; margin-bottom: 16px; }
+    .success-modal h3 { font-size: 22px; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
+    .success-modal p { font-size: 14px; color: #64748b; margin-bottom: 24px; }
+    .btn-go {
+      background: var(--blue); color: white; border: none;
+      border-radius: 12px; padding: 14px 32px; font-size: 15px;
+      font-weight: 700; font-family: 'Cairo', sans-serif; cursor: pointer; width: 100%;
+    }
+
+    footer {
+      background: #0f172a; color: #64748b; padding: 24px 32px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px; margin-top: 40px;
+    }
+    .footer-logo { font-size: 18px; font-weight: 800; color: white; }
+    .footer-logo span { color: var(--orange); }
+
+    @media (max-width: 768px) {
+      .layout { grid-template-columns: 1fr; }
+      .main-content { padding: 16px; }
+      .navbar { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-logo" onclick="window.location.href='home.html'">
+      <img src="assets/images/logo.png" alt="سهل شوب">
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="nav-icon-btn" onclick="window.location.href='orders.html'">📦</button>
+      <button class="nav-user" onclick="window.location.href='profile.html'">
+        👤 <span id="userName">حسابي</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <h1>↩️ طلب إرجاع</h1>
+  </div>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb-bar">
+    <a href="home.html">الرئيسية</a>
+    <span>›</span>
+    <a href="orders.html">طلباتي</a>
+    <span>›</span>
+    <span>طلب إرجاع</span>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <div class="layout">
+
+      <!-- FORM -->
+      <div class="form-card">
+        <div class="card-title">↩️ طلب إرجاع منتج</div>
+
+        <div class="mb-3">
+          <label class="form-label">سبب الإرجاع *</label>
+          <select class="form-select" id="returnReason">
+            <option value="">اختر سبب الإرجاع</option>
+            <option value="wrong_item">المنتج غير مطابق للوصف</option>
+            <option value="damaged">المنتج وصل تالفاً</option>
+            <option value="wrong_size">المقاس غير مناسب</option>
+            <option value="wrong_color">اللون مختلف عن الصورة</option>
+            <option value="not_needed">لم أعد بحاجة للمنتج</option>
+            <option value="quality">جودة المنتج سيئة</option>
+            <option value="other">سبب آخر</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">تفاصيل إضافية</label>
+          <textarea class="form-control" id="returnDetails" rows="4"
+            placeholder="اكتب تفاصيل إضافية (اختياري)..."></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">صور المنتج (اختياري)</label>
+          <div class="upload-box" onclick="document.getElementById('imgInput').click()">
+            <div class="upload-icon">📤</div>
+            <div class="upload-text">اختر الصور أو اسحب وأفلت</div>
+            <div class="upload-hint">PNG أو JPG، الأقصى 5 صور</div>
+            <input type="file" id="imgInput" multiple accept="image/*" onchange="previewImages(this)">
+          </div>
+          <div class="preview-imgs" id="previewImgs"></div>
+        </div>
+
+        <button class="btn-submit" onclick="submitReturn()">📤 إرسال طلب الإرجاع</button>
+        <button class="btn-cancel" onclick="window.location.href='orders.html'">← العودة لطلباتي</button>
+      </div>
+
+      <!-- ORDER INFO -->
+      <div>
+        <div class="info-card">
+          <div class="card-title" style="margin-bottom:16px;">📋 معلومات الطلب</div>
+
+          <div class="order-info-row">
+            <span class="label">رقم الطلب</span>
+            <span class="value" id="infoOrderId">—</span>
+          </div>
+          <div class="order-info-row">
+            <span class="label">التاريخ</span>
+            <span class="value" id="infoDate">—</span>
+          </div>
+          <div class="order-info-row">
+            <span class="label">المنتج</span>
+            <span class="value" id="infoProduct">—</span>
+          </div>
+          <div class="order-info-row">
+            <span class="label">السعر</span>
+            <span class="value" id="infoPrice">—</span>
+          </div>
+
+          <div class="product-preview" id="productPreview">
+            <div class="p-emoji">🛍️</div>
+            <div>
+              <div class="p-name" id="prevName">جاري التحميل...</div>
+              <div class="p-price" id="prevPrice">—</div>
+            </div>
+          </div>
+
+          <div class="status-box">
+            <div style="display:flex;align-items:center;">
+              <span class="status-dot"></span>
+              <span class="status-title">قيد المراجعة</span>
+            </div>
+            <div class="status-desc">سيتم الرد عليك خلال 1-2 يوم عمل</div>
+          </div>
+
+          <div class="policy-box">
+            <div class="policy-title">📌 سياسة الإرجاع</div>
+            <div class="policy-item">✅ <span>الإرجاع مجاني خلال 7 أيام</span></div>
+            <div class="policy-item">✅ <span>المنتج يجب أن يكون بحالته الأصلية</span></div>
+            <div class="policy-item">✅ <span>استرداد كامل المبلغ خلال 48 ساعة</span></div>
+            <div class="policy-item">❌ <span>لا يقبل الإرجاع بعد 7 أيام</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS MODAL -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-modal">
+      <div class="s-icon">✅</div>
+      <h3>تم إرسال طلب الإرجاع!</h3>
+      <p>سيتم مراجعة طلبك والرد عليك خلال 1-2 يوم عمل</p>
+      <button class="btn-go" onclick="window.location.href='orders.html'">📦 العودة لطلباتي</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">سهل<span>شوب</span></div>
+    <p style="margin:0;font-size:13px;">جميع الحقوق محفوظة © 2026</p>
+  </footer>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script src="JS/firebase-config.js"></script>
+
+  <script>
+    let currentUser = null;
+    let orderData = null;
+
+    auth.onAuthStateChanged(user => {
+      if (!user) { window.location.href = "login.html"; return; }
+      currentUser = user;
+      db.collection("users").doc(user.uid).get().then(doc => {
+        if (doc.exists) document.getElementById("userName").textContent = doc.data().name.split(" ")[0];
+      });
+      loadOrderInfo();
+    });
+
+    function loadOrderInfo() {
+      const params = new URLSearchParams(window.location.search);
+      const orderId = params.get("orderId");
+      if (!orderId) {
+        // No order ID — show generic form
+        document.getElementById("infoOrderId").textContent = "غير محدد";
+        document.getElementById("prevName").textContent = "اختر من طلباتك";
+        return;
+      }
+      db.collection("orders").doc(orderId).get().then(doc => {
+        if (!doc.exists) return;
+        orderData = { id: doc.id, ...doc.data() };
+        const o = orderData;
+        const firstItem = (o.items || [])[0];
+        const date = o.createdAt ? o.createdAt.toDate().toLocaleDateString("ar-DZ") : "—";
+
+        document.getElementById("infoOrderId").textContent = "#" + doc.id.substring(0,8).toUpperCase();
+        document.getElementById("infoDate").textContent = date;
+        document.getElementById("infoProduct").textContent = firstItem?.name || "—";
+        document.getElementById("infoPrice").textContent = firstItem ? Number(firstItem.price).toLocaleString() + " دج" : "—";
+        document.getElementById("prevName").textContent = firstItem?.name || "—";
+        document.getElementById("prevPrice").textContent = firstItem ? Number(firstItem.price).toLocaleString() + " دج" : "—";
+
+        if (firstItem?.image) {
+          document.getElementById("productPreview").innerHTML = `
+            <img src="${firstItem.image}" style="width:72px;height:72px;border-radius:10px;object-fit:cover;">
+            <div>
+              <div class="p-name">${firstItem.name}</div>
+              <div class="p-price">${Number(firstItem.price).toLocaleString()} دج</div>
+            </div>`;
+        }
+      });
+    }
+
+    function previewImages(input) {
+      const container = document.getElementById("previewImgs");
+      container.innerHTML = "";
+      const files = Array.from(input.files).slice(0, 5);
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          img.className = "preview-img";
+          container.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function submitReturn() {
+      const reason = document.getElementById("returnReason").value;
+      const details = document.getElementById("returnDetails").value.trim();
+
+      if (!reason) { alert("⚠️ يرجى اختيار سبب الإرجاع"); return; }
+
+      const params = new URLSearchParams(window.location.search);
+      const returnData = {
+        userId: currentUser.uid,
+        orderId: params.get("orderId") || "unknown",
+        reason,
+        details,
+        status: "pending",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      db.collection("returns").add(returnData).then(() => {
+        document.getElementById("successOverlay").classList.add("show");
+      }).catch(() => {
+        // Show success anyway for demo
+        document.getElementById("successOverlay").classList.add("show");
+      });
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

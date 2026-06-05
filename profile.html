@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سهل شوب - حسابي</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Cairo', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --blue: #2563EB; --orange: #FF6B00; --dark: #1e293b; --light: #f0f4ff; }
+    body { background: #f8faff; }
+
+    .navbar {
+      background: white;
+      padding: 0 32px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(37,99,235,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar-logo img { height: 44px; cursor: pointer; }
+    .navbar-center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+    .navbar-center .nav-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--light);
+      border: 2px solid var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+    }
+    .navbar-actions { display: flex; align-items: center; gap: 6px; }
+    .nav-icon-btn {
+      position: relative;
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 10px;
+      transition: background 0.2s;
+    }
+    .nav-icon-btn:hover { background: var(--light); }
+    .badge-dot {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      background: var(--orange);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-header {
+      background: linear-gradient(135deg, #1e3a8a, #2563EB);
+      padding: 40px 32px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .avatar {
+      width: 88px; height: 88px; border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px;
+      border: 3px solid rgba(255,255,255,0.4);
+      flex-shrink: 0;
+    }
+    .profile-header h2 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+    .profile-header p { font-size: 14px; opacity: 0.8; margin: 0; }
+    .role-badge {
+      display: inline-block;
+      background: var(--orange);
+      color: white;
+      font-size: 11px; font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 20px;
+      margin-top: 8px;
+    }
+
+    .main-content {
+      padding: 28px 32px;
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 24px;
+    }
+    .side-menu {
+      background: white; border-radius: 20px; padding: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05); height: fit-content;
+    }
+    .menu-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; border-radius: 12px; cursor: pointer;
+      font-size: 14px; font-weight: 600; color: #64748b;
+      transition: all 0.2s; border: none; background: none;
+      width: 100%; text-align: right;
+    }
+    .menu-item:hover { background: var(--light); color: var(--blue); }
+    .menu-item.active { background: var(--light); color: var(--blue); }
+    .menu-item .m-icon { font-size: 20px; }
+    .menu-divider { height: 1px; background: #f0f0f0; margin: 8px 0; }
+    .menu-item.danger { color: #dc2626; }
+    .menu-item.danger:hover { background: #fef2f2; color: #dc2626; }
+
+    .panel {
+      background: white; border-radius: 20px; padding: 28px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05); display: none;
+    }
+    .panel.active { display: block; }
+    .panel-title {
+      font-size: 18px; font-weight: 800; color: var(--dark);
+      margin-bottom: 24px; padding-bottom: 16px;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .form-label { font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 6px; }
+    .form-control {
+      border: 2px solid #e8eef8; border-radius: 12px;
+      padding: 12px 16px; font-family: 'Cairo', sans-serif;
+      font-size: 14px; width: 100%; outline: none; transition: border 0.2s;
+    }
+    .form-control:focus { border-color: var(--blue); }
+    .form-control:disabled { background: #f8faff; color: #94a3b8; cursor: not-allowed; }
+    .btn-save {
+      background: var(--blue); color: white; border: none;
+      border-radius: 12px; padding: 13px 32px;
+      font-size: 15px; font-weight: 700; font-family: 'Cairo', sans-serif;
+      cursor: pointer; transition: background 0.2s; margin-top: 8px;
+    }
+    .btn-save:hover { background: #1d4ed8; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: var(--light); border-radius: 16px; padding: 20px; text-align: center; }
+    .stat-icon { font-size: 28px; margin-bottom: 8px; }
+    .stat-num { font-size: 24px; font-weight: 800; color: var(--blue); }
+    .stat-label { font-size: 12px; color: #64748b; margin-top: 2px; }
+
+    .logout-box { text-align: center; padding: 40px 20px; }
+    .logout-icon { font-size: 64px; margin-bottom: 16px; }
+    .logout-box h3 { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
+    .logout-box p { color: #94a3b8; margin-bottom: 24px; }
+    .btn-logout {
+      background: #dc2626; color: white; border: none;
+      border-radius: 12px; padding: 14px 40px;
+      font-size: 16px; font-weight: 700; font-family: 'Cairo', sans-serif;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .btn-logout:hover { background: #b91c1c; }
+
+    .success-msg {
+      background: #f0fdf4; color: #16a34a; border-radius: 10px;
+      padding: 12px 16px; font-size: 14px; font-weight: 600;
+      margin-bottom: 16px; display: none;
+    }
+
+    footer {
+      background: #0f172a; color: #64748b;
+      padding: 24px 32px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px; margin-top: 40px;
+    }
+    .footer-logo { font-size: 18px; font-weight: 800; color: white; }
+    .footer-logo span { color: var(--orange); }
+
+    @media (max-width: 768px) {
+      .main-content { grid-template-columns: 1fr; padding: 16px; }
+      .navbar { padding: 0 16px; }
+      .profile-header { padding: 24px 16px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .navbar-center span { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-logo" onclick="window.location.href='home.html'">
+      <img src="assets/images/logo.png" alt="سهل شوب">
+    </div>
+
+    <!-- ✅ User name from Firebase -->
+    <div class="navbar-center">
+      <div class="nav-avatar">👤</div>
+      <span id="navUserName">...</span>
+    </div>
+
+    <div class="navbar-actions">
+      <button class="nav-icon-btn" onclick="window.location.href='cart.html'">
+        🛒 <span class="badge-dot" id="cartCount">0</span>
+      </button>
+      <button class="nav-icon-btn" onclick="window.location.href='orders.html'">📦</button>
+    </div>
+  </nav>
+
+  <!-- PROFILE HEADER -->
+  <div class="profile-header">
+    <div class="avatar">👤</div>
+    <div>
+      <h2 id="headerName">مرحباً!</h2>
+      <p id="headerEmail">...</p>
+      <div class="role-badge" id="headerRole">عميل</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <div class="side-menu">
+      <button class="menu-item active" onclick="showPanel('overview', this)">
+        <span class="m-icon">📊</span> نظرة عامة
+      </button>
+      <button class="menu-item" onclick="showPanel('edit', this)">
+        <span class="m-icon">✏️</span> تعديل البيانات
+      </button>
+      <button class="menu-item" onclick="window.location.href='orders.html'">
+        <span class="m-icon">📦</span> طلباتي
+      </button>
+      <button class="menu-item" onclick="window.location.href='cart.html'">
+        <span class="m-icon">🛒</span> سلة التسوق
+      </button>
+      <div class="menu-divider"></div>
+      <button class="menu-item" id="adminBtn" onclick="window.location.href='admin-dashboard.html'"
+        style="display:none;">
+        <span class="m-icon">⚙️</span> لوحة الإدارة
+      </button>
+      <button class="menu-item danger" onclick="showPanel('logout', this)">
+        <span class="m-icon">🚪</span> تسجيل الخروج
+      </button>
+    </div>
+
+    <div>
+      <div class="panel active" id="panel-overview">
+        <div class="panel-title">📊 نظرة عامة</div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-num" id="totalOrders">0</div>
+            <div class="stat-label">إجمالي الطلبات</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🕐</div>
+            <div class="stat-num" id="pendingOrders">0</div>
+            <div class="stat-label">قيد الانتظار</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🎉</div>
+            <div class="stat-num" id="deliveredOrders">0</div>
+            <div class="stat-label">تم التسليم</div>
+          </div>
+        </div>
+        <div style="background:var(--light);border-radius:16px;padding:20px;">
+          <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:12px;">معلوماتي</div>
+          <div style="display:grid;gap:10px;">
+            <div style="display:flex;justify-content:space-between;font-size:14px;">
+              <span style="color:#64748b;">الاسم</span>
+              <span style="font-weight:700;" id="infoName">—</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:14px;">
+              <span style="color:#64748b;">البريد الإلكتروني</span>
+              <span style="font-weight:700;" id="infoEmail">—</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:14px;">
+              <span style="color:#64748b;">نوع الحساب</span>
+              <span style="font-weight:700;" id="infoRole">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-edit">
+        <div class="panel-title">✏️ تعديل البيانات</div>
+        <div class="success-msg" id="saveSuccess">✅ تم حفظ التغييرات بنجاح!</div>
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label">الاسم الكامل</label>
+            <input type="text" class="form-control" id="editName" placeholder="أدخل اسمك الكامل">
+          </div>
+          <div class="col-12">
+            <label class="form-label">البريد الإلكتروني</label>
+            <input type="email" class="form-control" id="editEmail" disabled>
+          </div>
+          <div class="col-12">
+            <label class="form-label">رقم الهاتف (اختياري)</label>
+            <input type="tel" class="form-control" id="editPhone" placeholder="05xxxxxxxx">
+          </div>
+          <div class="col-12">
+            <label class="form-label">العنوان (اختياري)</label>
+            <input type="text" class="form-control" id="editAddress" placeholder="ولايتك، مدينتك...">
+          </div>
+          <div class="col-12">
+            <button class="btn-save" onclick="saveProfile()">💾 حفظ التغييرات</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-logout">
+        <div class="logout-box">
+          <div class="logout-icon">👋</div>
+          <h3>هل تريد تسجيل الخروج؟</h3>
+          <p>سيتم إنهاء جلستك الحالية</p>
+          <button class="btn-logout" onclick="logout()">🚪 تسجيل الخروج</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">سهل<span>شوب</span></div>
+    <p style="margin:0;font-size:13px;">جميع الحقوق محفوظة © 2025</p>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script src="JS/firebase-config.js"></script>
+
+  <script>
+    let currentUser = null;
+
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        currentUser = user;
+        loadProfile(user);
+        updateCartCount();
+      }
+    });
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      document.getElementById("cartCount").textContent = cart.reduce((s, i) => s + i.qty, 0);
+    }
+
+    function loadProfile(user) {
+      db.collection("users").doc(user.uid).get().then(doc => {
+        if (!doc.exists) return;
+        const data = doc.data();
+
+        // ✅ Navbar name — pulled directly from Firestore
+        document.getElementById("navUserName").textContent = data.name;
+
+        // Header
+        document.getElementById("headerName").textContent = "مرحباً، " + data.name;
+        document.getElementById("headerEmail").textContent = data.email;
+        document.getElementById("headerRole").textContent = data.role === "admin" ? "مدير" : "عميل";
+
+        // Overview
+        document.getElementById("infoName").textContent = data.name;
+        document.getElementById("infoEmail").textContent = data.email;
+        document.getElementById("infoRole").textContent = data.role === "admin" ? "مدير 👑" : "عميل 🛍️";
+
+        // Edit form
+        document.getElementById("editName").value = data.name || "";
+        document.getElementById("editEmail").value = data.email || "";
+        document.getElementById("editPhone").value = data.phone || "";
+        document.getElementById("editAddress").value = data.address || "";
+
+        if (data.role === "admin") {
+          document.getElementById("adminBtn").style.display = "flex";
+        }
+
+        loadOrderStats(user.uid);
+      });
+    }
+
+    function loadOrderStats(uid) {
+      db.collection("orders").where("userId", "==", uid).get().then(snapshot => {
+        let total = 0, pending = 0, delivered = 0;
+        snapshot.forEach(doc => {
+          total++;
+          if (doc.data().status === "pending") pending++;
+          if (doc.data().status === "delivered") delivered++;
+        });
+        document.getElementById("totalOrders").textContent = total;
+        document.getElementById("pendingOrders").textContent = pending;
+        document.getElementById("deliveredOrders").textContent = delivered;
+      });
+    }
+
+    function saveProfile() {
+      const name = document.getElementById("editName").value.trim();
+      const phone = document.getElementById("editPhone").value.trim();
+      const address = document.getElementById("editAddress").value.trim();
+
+      if (!name) { alert("الاسم مطلوب"); return; }
+
+      db.collection("users").doc(currentUser.uid).update({ name, phone, address })
+        .then(() => {
+          document.getElementById("saveSuccess").style.display = "block";
+          // ✅ Also update navbar name live when user saves a new name
+          document.getElementById("navUserName").textContent = name;
+          document.getElementById("headerName").textContent = "مرحباً، " + name;
+          document.getElementById("infoName").textContent = name;
+          setTimeout(() => {
+            document.getElementById("saveSuccess").style.display = "none";
+          }, 3000);
+        });
+    }
+
+    function logout() {
+      auth.signOut().then(() => {
+        localStorage.removeItem("cart");
+        window.location.href = "index.html";
+      });
+    }
+
+    function showPanel(name, el) {
+      document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+      document.querySelectorAll(".menu-item").forEach(m => m.classList.remove("active"));
+      document.getElementById("panel-" + name).classList.add("active");
+      el.classList.add("active");
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
