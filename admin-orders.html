@@ -13,71 +13,34 @@
 
     /* SIDEBAR */
     .sidebar {
-      width: 240px;
-      min-height: 100vh;
-      background: var(--dark);
-      position: fixed;
-      right: 0;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      flex-direction: column;
+      width: 240px; min-height: 100vh; background: var(--dark);
+      position: fixed; right: 0; top: 0; z-index: 100; display: flex; flex-direction: column;
     }
     .sidebar-logo {
-      padding: 24px 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; gap: 12px;
     }
     .sidebar-logo img { height: 36px; }
     .sidebar-logo span { font-size: 16px; font-weight: 800; color: white; }
     .sidebar-logo span b { color: var(--orange); }
     .sidebar-menu { padding: 16px 12px; flex: 1; }
     .sidebar-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 8px 12px 4px;
-      margin-top: 8px;
+      font-size: 10px; font-weight: 700; color: #475569;
+      text-transform: uppercase; letter-spacing: 0.08em; padding: 8px 12px 4px; margin-top: 8px;
     }
     .sidebar-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 11px 14px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      color: #94a3b8;
-      transition: all 0.2s;
-      text-decoration: none;
-      margin-bottom: 2px;
+      display: flex; align-items: center; gap: 12px; padding: 11px 14px;
+      border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600;
+      color: #94a3b8; transition: all 0.2s; text-decoration: none; margin-bottom: 2px;
     }
     .sidebar-item:hover { background: rgba(255,255,255,0.06); color: white; }
     .sidebar-item.active { background: var(--blue); color: white; }
     .sidebar-item .s-icon { font-size: 18px; }
-    .sidebar-bottom {
-      padding: 16px 12px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-    }
+    .sidebar-bottom { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.08); }
     .btn-logout-side {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 11px 14px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      color: #f87171;
-      background: none;
-      border: none;
-      width: 100%;
-      text-align: right;
+      display: flex; align-items: center; gap: 12px; padding: 11px 14px;
+      border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600;
+      color: #f87171; background: none; border: none; width: 100%; text-align: right;
     }
     .btn-logout-side:hover { background: rgba(248,113,113,0.1); }
 
@@ -86,16 +49,9 @@
 
     /* TOPBAR */
     .topbar {
-      background: white;
-      padding: 0 28px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      background: white; padding: 0 28px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 50;
     }
     .topbar h1 { font-size: 18px; font-weight: 800; color: var(--dark); }
 
@@ -103,139 +59,109 @@
     .content { padding: 28px; }
 
     /* FILTER TABS */
-    .filter-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
+    .filter-tabs { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
     .filter-tab {
-      background: white;
-      border: 2px solid #e8eef8;
-      border-radius: 10px;
-      padding: 8px 20px;
-      font-family: 'Cairo', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      color: #555;
-      cursor: pointer;
-      transition: all 0.2s;
+      background: white; border: 2px solid #e8eef8; border-radius: 10px;
+      padding: 8px 20px; font-family: 'Cairo', sans-serif; font-size: 13px;
+      font-weight: 600; color: #555; cursor: pointer; transition: all 0.2s;
     }
     .filter-tab:hover { border-color: var(--blue); color: var(--blue); }
     .filter-tab.active { background: var(--blue); color: white; border-color: var(--blue); }
 
+    /* DELIVERY TABLE SECTION */
+    .section-card {
+      background: white; border-radius: 20px; padding: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05); margin-bottom: 28px;
+    }
+    .section-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid #f0f0f0;
+    }
+    .section-header h3 { font-size: 16px; font-weight: 800; color: var(--dark); }
+    .section-badge {
+      background: var(--light); color: var(--blue);
+      border-radius: 8px; padding: 4px 12px; font-size: 13px; font-weight: 700;
+    }
+
+    /* TABLE */
+    .delivery-table { width: 100%; border-collapse: collapse; }
+    .delivery-table th {
+      background: #f8faff; color: #64748b; font-size: 12px; font-weight: 700;
+      padding: 12px 16px; text-align: right; border-bottom: 2px solid #e8eef8;
+    }
+    .delivery-table td {
+      padding: 14px 16px; font-size: 13px; font-weight: 600;
+      color: var(--dark); border-bottom: 1px solid #f8f8f8; vertical-align: middle;
+    }
+    .delivery-table tr:last-child td { border-bottom: none; }
+    .delivery-table tr:hover td { background: #fafbff; }
+
+    /* STATUS PILLS */
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 20px;
+    }
+    .pill-reserved  { background: #FFF3CD; color: #92400E; }
+    .pill-sold      { background: #DCFCE7; color: #15803D; }
+    .pill-shipped   { background: #F0FDF4; color: #16A34A; }
+
     /* ORDER CARDS */
     .order-card {
-      background: white;
-      border-radius: 20px;
-      padding: 22px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-      margin-bottom: 16px;
+      background: white; border-radius: 20px; padding: 22px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05); margin-bottom: 16px;
     }
     .order-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-      gap: 10px;
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
     }
     .order-id { font-size: 15px; font-weight: 800; color: var(--blue); }
     .order-date { font-size: 12px; color: #94a3b8; margin-top: 3px; }
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      font-weight: 700;
-      padding: 6px 16px;
-      border-radius: 20px;
-    }
-    .pill-pending { background: #FFF7ED; color: #EA580C; }
-    .pill-confirmed { background: #EFF6FF; color: #2563EB; }
-    .pill-shipped { background: #F0FDF4; color: #16A34A; }
-    .pill-delivered { background: #DCFCE7; color: #15803D; }
-    .pill-cancelled { background: #FEF2F2; color: #DC2626; }
-
-    /* ORDER INFO GRID */
     .order-info-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      background: #f8faff;
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 14px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+      background: #f8faff; border-radius: 14px; padding: 16px; margin-bottom: 14px;
     }
     .info-item .info-label { font-size: 11px; color: #94a3b8; font-weight: 600; margin-bottom: 3px; }
     .info-item .info-value { font-size: 13px; font-weight: 700; color: var(--dark); }
-
-    /* ITEMS LIST */
     .items-toggle {
-      background: none;
-      border: 1px solid #e8eef8;
-      border-radius: 10px;
-      padding: 8px 16px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--blue);
-      font-family: 'Cairo', sans-serif;
-      cursor: pointer;
-      margin-bottom: 12px;
+      background: none; border: 1px solid #e8eef8; border-radius: 10px;
+      padding: 8px 16px; font-size: 13px; font-weight: 600; color: var(--blue);
+      font-family: 'Cairo', sans-serif; cursor: pointer; margin-bottom: 12px;
     }
     .order-items { display: none; margin-bottom: 12px; }
     .order-items.show { display: block; }
     .order-item-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 0;
-      border-bottom: 1px solid #f8f8f8;
-      font-size: 13px;
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 0; border-bottom: 1px solid #f8f8f8; font-size: 13px;
     }
     .order-item-row:last-child { border: none; }
     .item-dot { width: 8px; height: 8px; background: var(--orange); border-radius: 50%; flex-shrink: 0; }
-
-    /* STATUS UPDATE */
     .order-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      padding-top: 14px;
-      border-top: 1px solid #f0f0f0;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px; padding-top: 14px; border-top: 1px solid #f0f0f0;
     }
     .order-total { font-size: 16px; font-weight: 800; color: var(--dark); }
     .order-total span { color: var(--blue); }
     .status-actions { display: flex; gap: 8px; flex-wrap: wrap; }
     .btn-status {
-      border: none;
-      border-radius: 10px;
-      padding: 8px 16px;
-      font-size: 12px;
-      font-weight: 700;
-      font-family: 'Cairo', sans-serif;
-      cursor: pointer;
-      transition: all 0.2s;
+      border: none; border-radius: 10px; padding: 8px 16px; font-size: 12px;
+      font-weight: 700; font-family: 'Cairo', sans-serif; cursor: pointer; transition: all 0.2s;
     }
-    .btn-confirm { background: #EFF6FF; color: var(--blue); }
-    .btn-confirm:hover { background: #BFDBFE; }
-    .btn-ship { background: #F0FDF4; color: #16A34A; }
-    .btn-ship:hover { background: #BBF7D0; }
-    .btn-deliver { background: #DCFCE7; color: #15803D; }
-    .btn-deliver:hover { background: #A7F3D0; }
-    .btn-cancel { background: #FEF2F2; color: #DC2626; }
-    .btn-cancel:hover { background: #FEE2E2; }
+    .btn-confirm  { background: #EFF6FF; color: var(--blue); }
+    .btn-confirm:hover  { background: #BFDBFE; }
+    .btn-ship     { background: #F0FDF4; color: #16A34A; }
+    .btn-ship:hover     { background: #BBF7D0; }
+    .btn-deliver  { background: #DCFCE7; color: #15803D; }
+    .btn-deliver:hover  { background: #A7F3D0; }
+    .btn-cancel   { background: #FEF2F2; color: #DC2626; }
+    .btn-cancel:hover   { background: #FEE2E2; }
+
+    .pill-pending   { background: #FFF7ED; color: #EA580C; }
+    .pill-confirmed { background: #EFF6FF; color: #2563EB; }
+    .pill-delivered { background: #DCFCE7; color: #15803D; }
+    .pill-cancelled { background: #FEF2F2; color: #DC2626; }
 
     /* EMPTY */
-    .empty-state {
-      text-align: center;
-      padding: 60px;
-      background: white;
-      border-radius: 20px;
-      color: #aaa;
-    }
+    .empty-state { text-align: center; padding: 60px; background: white; border-radius: 20px; color: #aaa; }
     .empty-state .icon { font-size: 56px; margin-bottom: 12px; }
   </style>
 </head>
@@ -269,6 +195,31 @@
     </div>
 
     <div class="content">
+
+      <!-- DELIVERY STATUS TABLE -->
+      <div class="section-card">
+        <div class="section-header">
+          <h3>📦 حالة الطلبات مع شركة التوصيل</h3>
+          <span class="section-badge" id="deliveryCount">0 طلب</span>
+        </div>
+        <table class="delivery-table">
+          <thead>
+            <tr>
+              <th>رقم الطلب</th>
+              <th>العميل</th>
+              <th>الولاية</th>
+              <th>المبلغ</th>
+              <th>تاريخ الإرسال</th>
+              <th>الأيام</th>
+              <th>الحالة</th>
+            </tr>
+          </thead>
+          <tbody id="deliveryTableBody">
+            <tr><td colspan="7" style="text-align:center;color:#aaa;padding:24px;">جاري التحميل...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
       <!-- FILTER TABS -->
       <div class="filter-tabs">
         <button class="filter-tab active" onclick="filterOrders('all',this)">الكل</button>
@@ -320,8 +271,67 @@
           return tb - ta;
         });
         document.getElementById("totalCount").textContent = `إجمالي: ${allOrders.length} طلب`;
+        renderDeliveryTable();
         renderOrders();
       });
+    }
+
+    // Check if shipped order is reserved (> 4 days)
+    function isReserved(order) {
+      if (order.status !== "shipped") return false;
+      const ref = order.shippedAt || order.createdAt;
+      if (!ref) return false;
+      const refDate = ref.toDate ? ref.toDate() : new Date(ref);
+      return (Date.now() - refDate.getTime()) / (1000 * 60 * 60 * 24) > 4;
+    }
+
+    function getDaysPassed(order) {
+      const ref = order.shippedAt || order.createdAt;
+      if (!ref) return "—";
+      const refDate = ref.toDate ? ref.toDate() : new Date(ref);
+      return Math.floor((Date.now() - refDate.getTime()) / (1000 * 60 * 60 * 24));
+    }
+
+    function renderDeliveryTable() {
+      // Only shipped and delivered orders
+      const deliveryOrders = allOrders.filter(o => o.status === "shipped" || o.status === "delivered");
+      document.getElementById("deliveryCount").textContent = `${deliveryOrders.length} طلب`;
+
+      const tbody = document.getElementById("deliveryTableBody");
+      if (deliveryOrders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#aaa;padding:24px;">لا توجد طلبات مع شركة التوصيل</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = deliveryOrders.map(order => {
+        const addr = order.shippingAddress || {};
+        const days = getDaysPassed(order);
+
+        let pillClass, pillLabel;
+        if (order.status === "delivered") {
+          pillClass = "pill-sold";
+          pillLabel = "✅ مباع";
+        } else if (isReserved(order)) {
+          pillClass = "pill-reserved";
+          pillLabel = "📦 محجوز";
+        } else {
+          pillClass = "pill-shipped";
+          pillLabel = "🚚 قيد التوصيل";
+        }
+
+        const daysColor = days > 4 ? "color:#92400E;font-weight:800;" : "color:#16a34a;font-weight:700;";
+
+        return `
+          <tr>
+            <td style="color:var(--blue);font-weight:800;">#${order.id.substring(0,8).toUpperCase()}</td>
+            <td>${addr.fullName || "—"}</td>
+            <td>${addr.wilaya || "—"}</td>
+            <td style="color:var(--blue);font-weight:800;">${Number(order.total).toLocaleString()} دج</td>
+            <td>${formatDate(order.shippedAt || order.createdAt)}</td>
+            <td style="${daysColor}">${days} يوم</td>
+            <td><span class="status-pill ${pillClass}">${pillLabel}</span></td>
+          </tr>`;
+      }).join("");
     }
 
     function filterOrders(status, el) {
@@ -438,9 +448,14 @@
     }
 
     function updateStatus(orderId, newStatus) {
-      db.collection("orders").doc(orderId).update({ status: newStatus }).then(() => {
+      const updateData = { status: newStatus };
+      if (newStatus === "shipped") {
+        updateData.shippedAt = firebase.firestore.FieldValue.serverTimestamp();
+      }
+      db.collection("orders").doc(orderId).update(updateData).then(() => {
         const order = allOrders.find(o => o.id === orderId);
         if (order) order.status = newStatus;
+        renderDeliveryTable();
         renderOrders();
         showToast(`✅ تم تحديث حالة الطلب إلى: ${statusMap[newStatus].label}`);
       });

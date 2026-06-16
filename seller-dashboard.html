@@ -162,10 +162,12 @@
     .status-pill {
       font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
     }
-    .pill-pending { background: #FFF7ED; color: #EA580C; }
+    .pill-pending   { background: #FFF7ED; color: #EA580C; }
     .pill-confirmed { background: #EFF6FF; color: #2563EB; }
-    .pill-shipped { background: #F0FDF4; color: #16A34A; }
+    .pill-shipped   { background: #F0FDF4; color: #16A34A; }
     .pill-delivered { background: #DCFCE7; color: #15803D; }
+    .pill-reserved  { background: #FFF3CD; color: #92400E; }
+    .pill-sold      { background: #DCFCE7; color: #15803D; }
 
     /* ADD PRODUCT MODAL */
     .modal-overlay {
@@ -392,7 +394,6 @@
     function loadMyProducts() {
       db.collection("products").where("sellerId", "==", currentUser.uid).get()
         .then(snapshot => {
-          // If no sellerId filter, show all products for demo
           if (snapshot.empty) {
             return db.collection("products").get();
           }
@@ -430,15 +431,30 @@
         </div>`).join("");
     }
 
+    // Returns true if a shipped order has been with delivery for more than 4 days
+    function isReserved(o) {
+      if (o.status !== "shipped") return false;
+      const ref = o.shippedAt || o.createdAt;
+      if (!ref) return false;
+      const refDate = ref.toDate ? ref.toDate() : new Date(ref);
+      const daysPassed = (Date.now() - refDate.getTime()) / (1000 * 60 * 60 * 24);
+      return daysPassed > 4;
+    }
+
+    function getOrderBadge(o) {
+      if (o.status === "delivered") return ["pill-sold", "✅ مباع"];
+      if (isReserved(o))            return ["pill-reserved", "📦 محجوز"];
+      const map = {
+        pending:   ["pill-pending",   "🕐 قيد الانتظار"],
+        confirmed: ["pill-confirmed", "✅ مؤكد"],
+        shipped:   ["pill-shipped",   "🚚 توصيل"],
+      };
+      return map[o.status] || map.pending;
+    }
+
     function loadMyOrders() {
       db.collection("orders").limit(8).get().then(snapshot => {
         let total = 0, count = 0;
-        const statusMap = {
-          pending: ["pill-pending","🕐 قيد الانتظار"],
-          confirmed: ["pill-confirmed","✅ مؤكد"],
-          shipped: ["pill-shipped","🚚 توصيل"],
-          delivered: ["pill-delivered","🎉 تسليم"]
-        };
 
         if (snapshot.empty) {
           document.getElementById("ordersList").innerHTML = `<div style="text-align:center;color:#aaa;padding:24px;">لا توجد طلبات بعد</div>`;
@@ -450,7 +466,7 @@
           const o = doc.data();
           total += o.total || 0;
           count++;
-          const [cls, label] = statusMap[o.status] || statusMap.pending;
+          const [cls, label] = getOrderBadge(o);
           const name = o.shippingAddress?.fullName || "عميل";
           const date = o.createdAt ? o.createdAt.toDate().toLocaleDateString("ar-DZ") : "—";
           html += `
@@ -471,7 +487,6 @@
     }
 
     function buildCharts() {
-      // Sales chart
       new Chart(document.getElementById("salesChart"), {
         type: "line",
         data: {
@@ -495,7 +510,6 @@
         }
       });
 
-      // Category chart
       const cats = {};
       myProducts.forEach(p => { cats[p.category || "أخرى"] = (cats[p.category || "أخرى"] || 0) + 1; });
       if (Object.keys(cats).length === 0) cats["لا توجد منتجات"] = 1;
